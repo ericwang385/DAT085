@@ -15,5 +15,6 @@ instance Applicative (Labled l) where
 instance Functor (Labled l) where
     fmap = undefined
 
+--Unsafe can only use internally
 unLabled :: Labled l a -> a
 unLabled (MkLabled a) = a

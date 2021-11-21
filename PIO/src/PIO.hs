@@ -5,6 +5,7 @@ import GHC.Base (Applicative)
 
 newtype PIO l a = MkPIO (IO (Labled l a))
 
+-- Shall only be Monad not Functor for the defination of purpose limitation
 instance Monad (PIO l) where
     return a = MkPIO $ return $ return a
 
@@ -13,8 +14,9 @@ instance Monad (PIO l) where
             let MkPIO m' = k (unLabled pa)
             m'
 
+-- Appeals simply to meet Haskell demand
 instance Applicative (PIO l) where
-    pure  = undefined 
+    pure  = return 
     (<*>) = undefined
 
 instance Functor (PIO l) where
