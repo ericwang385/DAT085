@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Lattice
+      PIO
+      PMonad
   other-modules:
       Paths_PIO
   hs-source-dirs:
