@@ -1,18 +1,18 @@
 module Labled where
-import GHC.Base (Applicative)
-import Control.Monad.State.Strict (Functor)
+import Control.Applicative ()
+import Purpose
 
-newtype Labled l a = MkLabled a
+newtype (Purpose p) => Labled p a = MkLabled a
 
-instance Monad (Labled l) where
+instance Monad (Labled p) where
     return a = MkLabled a
     MkLabled a >>= k = MkLabled (let MkLabled b = k a in b)
 
-instance Applicative (Labled l) where
+instance Applicative (Labled p) where
     pure  = return 
     (<*>) = undefined
 
-instance Functor (Labled l) where
+instance Functor (Labled p) where
     fmap = undefined
 
 --Unsafe can only use internally
