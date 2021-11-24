@@ -21,3 +21,6 @@ instance Applicative (PIO l) where
 
 instance Functor (PIO l) where
     fmap = undefined
+
+run :: PIO l a -> IO (Labled l a)
+run (MkPIO m) = m

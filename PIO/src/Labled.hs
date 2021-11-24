@@ -1,8 +1,10 @@
+{-# LANGUAGE KindSignatures, DataKinds #-}
+
 module Labled where
 import Control.Applicative ()
-import Purpose
+import Purpose (Purpose)
 
-newtype (Purpose p) => Labled p a = MkLabled a
+newtype Labled (p :: Purpose) a = MkLabled a
 
 instance Monad (Labled p) where
     return a = MkLabled a

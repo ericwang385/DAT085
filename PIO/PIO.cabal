@@ -26,7 +26,6 @@ source-repository head
 library
   exposed-modules:
       Labled
-      Lattice
       PIO
       Purpose
   other-modules:
@@ -53,7 +52,6 @@ test-suite PIO-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Arithmetic
       Paths_PIO
   hs-source-dirs:
       test
