@@ -2,9 +2,9 @@
 
 module Labled where
 import Control.Applicative ()
-import Purpose (Purpose)
+import Purpose (Nil) 
 
-newtype Labled (p :: Purpose) a = MkLabled a
+newtype Labled p a = MkLabled a
 
 instance Monad (Labled p) where
     return a = MkLabled a
@@ -20,3 +20,6 @@ instance Functor (Labled p) where
 --Unsafe can only use internally
 unLabled :: Labled l a -> a
 unLabled (MkLabled a) = a
+
+toNil :: Labled l a -> Labled Nil a
+toNil (MkLabled a) = return a

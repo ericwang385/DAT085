@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      If
       Labled
       PIO
       Purpose
@@ -34,6 +35,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , constraints
   default-language: Haskell2010
 
 executable PIO-exe
@@ -46,6 +48,7 @@ executable PIO-exe
   build-depends:
       PIO
     , base >=4.7 && <5
+    , constraints
   default-language: Haskell2010
 
 test-suite PIO-test
@@ -59,4 +62,5 @@ test-suite PIO-test
   build-depends:
       PIO
     , base >=4.7 && <5
+    , constraints
   default-language: Haskell2010
