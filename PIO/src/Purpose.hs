@@ -25,7 +25,7 @@ type family Combine (a :: *) (b :: *) :: * where
 type family  (a :: *) :~: (b :: *) :: Constraint where
     a :~: All = a ~ a
     Nil :~: b = b ~ b
+    (Conj a1 a2) :~: (Conj b1 b2) = ((a1 :~: b1) || (a1 :~: b2), (a2 :~: b1) || (a2 :~: b2))
     a :~: (Conj b1 b2) = (a :~: b1, a :~: b2)
-    -- (Conj a1 a2) :~: (Conj b1 b2) = Conj b1 b2 :- a1
-    -- (Conj a1 a2) :~: b = (a1 :~: b) || (a2 :~: b)
+    (Conj a1 a2) :~: b = (a1 :~: b) || (a2 :~: b)
     a :~: b = a ~ b
