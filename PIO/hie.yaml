@@ -1,0 +1,6 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "PIO:lib"
+    - path: "./test"
+      component: "PIO:test:PIO-test"
