@@ -2,6 +2,7 @@ module PIO where
 
 import Labled (Labled, unLabled)
 import GHC.Base (Applicative)
+import Control.Monad (ap)
 
 newtype PIO l a = MkPIO (IO (Labled l a))
 
@@ -17,7 +18,7 @@ instance Monad (PIO l) where
 -- Appeals simply to meet Haskell demand
 instance Applicative (PIO l) where
     pure  = return 
-    (<*>) = undefined
+    (<*>) = ap
 
 instance Functor (PIO l) where
-    fmap = undefined
+    fmap f (MkPIO a) = MkPIO $ fmap f <$> a

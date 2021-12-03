@@ -1,8 +1,12 @@
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE DataKinds #-}
 module Labled where
 import Control.Applicative ()
-import Purpose
+import Purpose (Purpose)
+import Control.Monad (ap)
 
-newtype (Purpose p) => Labled p a = MkLabled a
+
+newtype Labled (p :: Purpose) a = MkLabled a
 
 instance Monad (Labled p) where
     return a = MkLabled a
@@ -10,10 +14,10 @@ instance Monad (Labled p) where
 
 instance Applicative (Labled p) where
     pure  = return 
-    (<*>) = undefined
+    (<*>) = ap
 
 instance Functor (Labled p) where
-    fmap = undefined
+    fmap f (MkLabled a) = MkLabled $ f a
 
 --Unsafe can only use internally
 unLabled :: Labled l a -> a
