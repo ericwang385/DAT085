@@ -6,7 +6,7 @@ import Purpose (Purpose)
 import Control.Monad (ap)
 
 
-newtype Labled (p :: Purpose) a = MkLabled a
+newtype Labled p a = MkLabled a
 
 instance Monad (Labled p) where
     return a = MkLabled a

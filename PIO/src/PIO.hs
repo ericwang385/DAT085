@@ -3,6 +3,7 @@ module PIO where
 import Labled (Labled, unLabled)
 import GHC.Base (Applicative)
 import Control.Monad (ap)
+import Data.Functor ((<&>))
 
 newtype PIO l a = MkPIO (IO (Labled l a))
 
@@ -22,3 +23,6 @@ instance Applicative (PIO l) where
 
 instance Functor (PIO l) where
     fmap f (MkPIO a) = MkPIO $ fmap f <$> a
+
+toPIO :: IO a -> PIO l a
+toPIO io = MkPIO $ io <&> return
