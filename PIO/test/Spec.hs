@@ -1,28 +1,17 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
+module Spec where
 
-import Ref
-import Labled
-import PIO
-import Purpose
-import Data.IORef
+import Labeled (Labeled, up)
+import Purpose (Purpose( Register, Ads, All, Nil ))
+import Test.Hspec
 
-type DB = [(Labled Register String, Labled Register String)]
+main :: IO()
+main = runTestTTAndExit testSuits
 
-main :: IO ()
-main = do
-    putStrLn "user Regrister program"
-    ref <- newIORef []
-    let db = toRef ref :: Ref Nil DB
-    putStrLn "Enter User Name:"
-    name <- getLine
-    let pname = return name :: Labled Register String
-    putStrLn "Enter User mail:"
-    mail <- getLine
-    let pmail = return mail :: Labled Ads String
-    regist ref name mail
-    return ()
+username = return "testName" :: Labeled Register String
+username' = return "testName" :: Labeled All String
+usermail = return "TestMain" :: Labeled Ads String
 
-regist :: ((Flows l1 Register), (Flows l2 Register)) => Ref l DB -> Labled l1 String -> Labled l2 String -> Labled l Bool
-regist = undefined
+testSuits = TestList [TestLabel "test1" test1]
+
+test1 = TestCase (assertEqual "test" (up username) username')

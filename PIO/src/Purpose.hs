@@ -4,9 +4,7 @@
 module Purpose where
 
 
-
-
-data Purpose = All | Nil | Register | Ads
+data Purpose = All | Nil | Register | Ads deriving(Eq, Show)
 
 class Flows (l1 :: Purpose) (l2 :: Purpose)
 instance Flows All All 
@@ -17,7 +15,7 @@ instance Flows Nil Register
 instance Flows Nil Ads
 instance Flows Nil All 
 instance Flows Register All
-instance Flows Ads Register
+instance Flows Ads Register 
 instance Flows Ads All 
 
 type family Join (l1 :: Purpose) (l2 :: Purpose) :: Purpose where
