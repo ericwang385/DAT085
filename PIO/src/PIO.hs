@@ -1,24 +1,22 @@
 module PIO where
 
 import Labeled (Labeled, extract)
-import GHC.Base (Applicative)
 import Control.Monad (ap)
-import Data.Functor ((<&>))
 
 newtype PIO l a = MkPIO (IO (Labeled l a))
 
--- -- Shall only be Monad not Functor for the defination of purpose limitation
+-- -- Shall only be Monad not Functor for the definition of purpose limitation
 instance Monad (PIO l) where
     return a = MkPIO $ return $ return a
 
     MkPIO m >>= k = MkPIO $ do
-            pa <- m 
+            pa <- m
             let MkPIO m' = k (extract pa)
             m'
 
 -- Appeals simply to meet Haskell demand
 instance Applicative (PIO l) where
-    pure  = return 
+    pure  = return
     (<*>) = ap
 
 instance Functor (PIO l) where
