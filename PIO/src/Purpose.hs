@@ -1,10 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Purpose where
 
-data Purpose = All | Nil | Register | Ads deriving(Eq, Show)
+data Purpose = All | Nil | Register | Ads deriving(Show)
 
 class Flows (l1 :: Purpose) (l2 :: Purpose)
 instance Flows All All
@@ -23,6 +24,14 @@ instance Less Ads Nil
 instance Less All Nil
 instance Less All Register
 instance Less All Ads
+
+type family (l1 :: Purpose) :< (l2 ::Purpose) where
+  Nil :< All = False
+  Nil :< Register = False
+  Nil :< Ads = False
+  Register :< All = False
+  Ads :< All = False
+  _ :< _ = True
 
 type family Join (l1 :: Purpose) (l2 :: Purpose) :: Purpose where
     Join Register Ads = Nil

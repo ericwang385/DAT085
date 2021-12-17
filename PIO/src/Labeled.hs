@@ -1,24 +1,42 @@
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE UndecidableInstances  #-}
+{-# LANGUAGE CPP #-}
 
 module Labeled where
 
-import Purpose (Purpose(All), Flows, Join, Less)
-import Control.Monad (ap)
+import Purpose
+import Control.Monad
+import Data.Type.Bool
+import Data.Kind (Type)
 
+-- The `T` monad family from the DCC paper
+newtype Labeled (l :: Purpose) a = MkLabeled a deriving(Eq, Show)
 
-newtype Labeled (p :: Purpose) a = MkLabeled a deriving(Eq, Show)
+type family CanFlowTo (l :: Purpose) (t :: Type) where
+  CanFlowTo l (Labeled l' a) = l :< l'
+  CanFlowTo l ()             = True
+  CanFlowTo l (s, t)         = CanFlowTo l s && CanFlowTo l t
+  CanFlowTo l (s -> t)       = CanFlowTo l t
+  CanFlowTo l _              = False
 
-instance Monad (Labeled p) where
-    return a = MkLabeled a
-    MkLabeled a >>= k = MkLabeled (let MkLabeled b = k a in b)
+infixl >>>=
+(>>>=) :: (l `CanFlowTo` s) ~ True => Labeled l a -> (a -> s) -> s
+(MkLabeled a) >>>= f = f a
 
-instance Applicative (Labeled p) where
-    pure  = return
-    (<*>) = ap
+instance Monad (Labeled l) where
+  return = MkLabeled
+  (>>=)  = (>>>=)
 
-instance Functor (Labeled p) where
-    fmap f (MkLabeled a) = MkLabeled $ f a
+instance Applicative (Labeled l) where
+  pure  = return
+  (<*>) = ap
+
+instance Functor (Labeled l) where
+  fmap = liftM
 
 up :: (Less p p') => Labeled p a -> Labeled p' a
 up (MkLabeled a) = MkLabeled a
@@ -37,6 +55,3 @@ com (MkLabeled (MkLabeled a)) = MkLabeled (MkLabeled a)
 
 extract :: Labeled p a -> a
 extract (MkLabeled a) = a
-
-unLabeled :: Labeled All a -> a
-unLabeled (MkLabeled a) = a
