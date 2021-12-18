@@ -1,26 +1,35 @@
+{-# LANGUAGE RankNTypes #-}
+
 module PIO where
 
---import Labeled (Labeled, extract)
---import Control.Monad (ap)
---
---newtype PIO l a = MkPIO (IO (Labeled l a))
---
----- -- Shall only be Monad not Functor for the definition of purpose limitation
---instance Monad (PIO l) where
---    return a = MkPIO $ return $ return a
---
---    MkPIO m >>= k = MkPIO $ do
---            pa <- m
---            let MkPIO m' = k (extract pa)
---            m'
---
----- Appeals simply to meet Haskell demand
---instance Applicative (PIO l) where
---    pure  = return
---    (<*>) = ap
---
---instance Functor (PIO l) where
---    fmap f (MkPIO a) = MkPIO $ fmap f <$> a
+import Labeled (Labeled, extract)
+import Data.Functor
+import Control.Monad
+import Purpose
 
--- toPIO :: IO a -> PIO l a
--- toPIO io = MkPIO $ io <&> return
+newtype PIO p a = MkPIO (IO (Labeled p a))
+
+
+instance Monad (PIO p) where
+    return a = MkPIO $ return $ return a
+
+    MkPIO m >>= k = MkPIO $ do
+            pa <- m
+            let MkPIO m' = k (extract pa)
+            m'
+
+instance Applicative (PIO p) where
+    pure  = return
+    (<*>) = ap
+
+instance Functor (PIO p) where
+    fmap = liftM
+
+addLabel :: forall p p' a . Flows p p' => PIO p' a -> PIO p (Labeled p' a)
+addLabel (MkPIO m) = MkPIO $ return <$> m
+
+toPIO :: IO a -> PIO p a
+toPIO io = MkPIO $ io <&> return
+
+run :: PIO p a -> IO (Labeled p a)
+run (MkPIO m) = m

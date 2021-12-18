@@ -28,6 +28,7 @@ library
       Labeled
       PIO
       Purpose
+      Ref
   other-modules:
       Paths_PIO
   hs-source-dirs:
@@ -53,6 +54,7 @@ test-suite PIO-test
   main-is: Spec.hs
   other-modules:
       Lib
+      Regist
       Paths_PIO
   hs-source-dirs:
       test
