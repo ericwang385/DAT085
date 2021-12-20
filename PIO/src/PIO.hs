@@ -28,8 +28,11 @@ instance Functor (PIO p) where
 addLabel :: forall p p' a . Flows p p' => PIO p' a -> PIO p (Labeled p' a)
 addLabel (MkPIO m) = MkPIO $ return <$> m
 
-toPIO :: IO a -> PIO p a
-toPIO io = MkPIO $ io <&> return
+toPIO :: Labeled p a -> PIO p a
+toPIO a = MkPIO (return a)
+
+iotoPIO :: IO a -> PIO p a
+iotoPIO io = MkPIO $ io <&> return
 
 run :: PIO p a -> IO (Labeled p a)
 run (MkPIO m) = m

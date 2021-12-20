@@ -54,7 +54,7 @@ test-suite PIO-test
   main-is: Spec.hs
   other-modules:
       Lib
-      Regist
+      Register
       Paths_PIO
   hs-source-dirs:
       test

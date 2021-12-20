@@ -55,3 +55,6 @@ com (MkLabeled (MkLabeled a)) = MkLabeled (MkLabeled a)
 
 extract :: Labeled p a -> a
 extract (MkLabeled a) = a
+  
+unLabeled :: Labeled All a -> a
+unLabeled (MkLabeled a) = a
