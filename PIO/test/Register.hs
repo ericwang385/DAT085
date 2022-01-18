@@ -15,8 +15,8 @@ testmail = return "testMail" :: Labeled Ads String
 testmail' = return "testMail2" :: Labeled Ads String
 
 
-main :: IO ()
-main = do
+regist :: IO ()
+regist = do
     putStrLn "Example program for PIO"
     testdb <- newIORef [(testname, testmail)]
     putStrLn "Enter username"
@@ -25,10 +25,10 @@ main = do
     usermail <- getLine
     let db = createRef testdb :: Ref All DB
     let username' = return username :: Labeled Register String
-    let usermail' = return usermail :: Labeled Ads String
+    let usermail' = return usermail :: Labeled All String
     res_exist <- run $ existUser db username'
     if extract res_exist then putStrLn "User already exist"
     else do
-      run $ updateDB db username' usermail'
+      run $ updateDB db username' (up usermail')
       putStrLn "Register success"
       return ()

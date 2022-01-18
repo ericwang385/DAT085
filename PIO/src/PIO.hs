@@ -1,4 +1,5 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE DataKinds #-}
 
 module PIO where
 
@@ -36,3 +37,4 @@ iotoPIO io = MkPIO $ io <&> return
 
 run :: PIO p a -> IO (Labeled p a)
 run (MkPIO m) = m
+

@@ -9,6 +9,7 @@
 module Labeled where
 
 import Purpose
+import Data.Hashable (hash)
 import Control.Monad
 import Data.Type.Bool
 import Data.Kind (Type)
@@ -58,3 +59,6 @@ extract (MkLabeled a) = a
   
 unLabeled :: Labeled All a -> a
 unLabeled (MkLabeled a) = a
+
+hash :: Labeled p String -> Labeled Nil String
+hash = return . show . Data.Hashable.hash . extract
