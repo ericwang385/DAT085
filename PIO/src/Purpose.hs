@@ -31,6 +31,7 @@ type family (l1 :: Purpose) :< (l2 ::Purpose) where
   Nil :< Ads = False
   Register :< All = False
   Ads :< All = False
+  
   _ :< _ = True
 
 type family Join (l1 :: Purpose) (l2 :: Purpose) :: Purpose where

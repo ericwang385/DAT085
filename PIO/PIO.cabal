@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Effect
       Labeled
       PIO
       Purpose
@@ -35,7 +36,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , hashable
+    , effect-monad
   default-language: Haskell2010
 
 executable PIO-exe
@@ -63,6 +64,5 @@ test-suite PIO-test
   build-depends:
       PIO
     , base >=4.7 && <5
-    , hashable
     , hspec
   default-language: Haskell2010
