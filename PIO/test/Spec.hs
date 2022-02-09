@@ -4,33 +4,21 @@ import Data.List
 import Data.Maybe
 import Effect
 import Monad
-import Labeled (Labeled, up, join, dup, extract, down, hash, tag)
-import Purpose (Purpose( Register, Ads, All, Nil))
+import Purpose
+import Labeled
 import Prelude hiding (Monad(..))
+import qualified Prelude as P
 
+data Login
+data Ads
+data Register = Combine Login Ads
+type DB = Labeled All [(Labeled Register String, Labeled Login String)]
 
-username = tag "testName" Register
-username' = tag "testName2" Register
-usermail = tag "testMain" Ads
-usermail' = tag "testMain2" Ads
-
-type DB = Labeled All [(Labeled Register String, Labeled Ads String)]
-db = tag [(username, usermail)] All
-
-
-main :: IO ()
+main :: IO()
 main = undefined
 
 existUser :: DB -> Labeled Register String -> Labeled Register Bool
 existUser db name = do
-          db' <- db
-          nameList <- mapM fst db'
-          name' <- name
-          return $ isJust $ find (==name') nameList
---existUser db name = db >>= \db' -> mapM fst db' >>= --All
---                                                \nameList -> name >>=
---                                                \name' -> return $ isJust $ find (==name') nameList
-
-
-
-
+            db' <- db
+            name' <- name
+            return False

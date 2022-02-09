@@ -28,9 +28,7 @@ library
       Effect
       Labeled
       Monad
-      PIO
       Purpose
-      Ref
   other-modules:
       Paths_PIO
   hs-source-dirs:
@@ -56,8 +54,6 @@ test-suite PIO-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Lib
-      Register
       Paths_PIO
   hs-source-dirs:
       test

@@ -6,40 +6,28 @@
 
 module Purpose where
 
-data Purpose = All | Nil | Register | Ads deriving(Show)
+import Data.Kind (Constraint)
 
---class Flows (l1 :: Purpose) (l2 :: Purpose)
---instance Flows All All
---instance Flows Nil Nil
---instance Flows Register Register
---instance Flows Ads Ads
---instance Flows All Register
---instance Flows All Ads
---instance Flows All Nil
---instance Flows Register Nil
---instance Flows Ads Nil
 
-class Less (l1 :: Purpose) (l2 :: Purpose)
-instance Less Register Nil
-instance Less Ads Nil
-instance Less All Nil
-instance Less All Register
-instance Less All Ads
+data All
+data P
+data Nil
+data Conj a b
 
-type family Join (l1 :: Purpose) (l2 :: Purpose) :: Purpose where
-    Join Register Ads = Nil
-    Join Ads Register = Nil
-    Join Register Register = Register
-    Join Ads Ads = Ads
-    Join Nil Nil = Nil
-    Join All All = All
+type family Combine a b where
+  Combine a All = a
+  Combine All a = a
+  Combine a a = a
+  Combine a (Conj b c) = Conj a (Conj b c)
 
-type family (l1 :: Purpose) :< (l2 ::Purpose) :: Bool where
-  Nil :< All = False
-  Nil :< Register = False
-  Nil :< Ads = False
-  Register :< All = False
-  Ads :< All = False
-  _ :< _ = True
+type family CanFlowTo a b :: Constraint where
+  CanFlowTo All a = a ~ a
+  CanFlowTo a Nil = a ~ a
+  CanFlowTo (Conj a1 a2) (Conj a1 b) = CanFlowTo a2 b
+  CanFlowTo (Conj a1 a2) (Conj a2 b) = CanFlowTo a1 b
+  CanFlowTo a1 (Conj a1 a2) = a1 ~ a1
+  CanFlowTo a2 (Conj a1 a2) = a1 ~ a1
+  CanFlowTo (Conj a b) c = (CanFlowTo a c, CanFlowTo b c)
+  CanFlowTo a b = a ~ b
 
 
