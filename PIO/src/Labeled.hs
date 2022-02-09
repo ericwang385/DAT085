@@ -9,26 +9,32 @@
 module Labeled where
 
 import Purpose
-import Control.Effect
+import Effect
 import Prelude hiding (Monad(..))
 import Data.Type.Bool
 import Data.Kind (Type)
 
 -- The `T` monad family from the DCC paper
-newtype Labeled (l :: Purpose) a = MkLabeled a deriving(Eq, Show)
+newtype Labeled (l :: Purpose) a = MkLabeled { val :: a } deriving(Eq, Show)
 
 instance Effect Labeled where
-  type Plus Labeled Register Ads = Nil
-  type Plus Labeled Ads Register = Nil
-  type Plus Labeled Register Register = Register
-  type Plus Labeled Ads Ads = Ads
-  type Plus Labeled Nil Nil = Nil
-  type Plus Labeled All All = All
-  type Inv Labeled a b = (a :< b) ~ True
-  type Unit Labeled = All
+  type Join Labeled Nil _ = Nil
+  type Join Labeled _ Nil = Nil
+  type Join Labeled Register Ads = Nil
+  type Join Labeled Ads Register = Nil
+  type Join Labeled Register Register = Register
+  type Join Labeled Ads Ads = Ads
+  type Join Labeled All All = All
+  type Join Labeled Register All = Register
+  type Join Labeled Ads All = Ads
+  type Join Labeled All Register = Register
+  type Join Labeled All Ads = Ads
 
-  return = MkLabeled
-  (MkLabeled a) >>= f = f a
+  type CanFlowTo Labeled a b = (a :< b) ~ True
+  type Btm Labeled = All
+
+  return a = MkLabeled a
+  (MkLabeled a) >>= f = MkLabeled . val $ f a
 
 --type family CanFlowTo (l :: Purpose) (t :: Type) where
 --  CanFlowTo l (Labeled l' a) = l :< l'
@@ -72,7 +78,7 @@ com (MkLabeled (MkLabeled a)) = MkLabeled (MkLabeled a)
 
 extract :: Labeled p a -> a
 extract (MkLabeled a) = a
-  
+
 unLabeled :: Labeled All a -> a
 unLabeled (MkLabeled a) = a
 

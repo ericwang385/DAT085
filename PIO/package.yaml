@@ -25,7 +25,7 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-    - effect-monad
+    - hashable
 
 executables:
   PIO-exe:
@@ -49,3 +49,4 @@ tests:
     dependencies:
     - PIO
     - hspec
+    - hashable

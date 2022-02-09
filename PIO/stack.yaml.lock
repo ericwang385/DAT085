@@ -3,19 +3,11 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
+packages: []
+snapshots:
 - completed:
-    hackage: type-level-sets-0.8.7.0@sha256:b9efaab4e4f6c96b0d8bca780b27168297fca4bddd8e47e1666deb1933e60374,3155
-    pantry-tree:
-      size: 382
-      sha256: d7afcb472d7a99199f47d0d6447161cc10834f988d68b1d29bf6e03e97286e64
+    size: 586296
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/18.yaml
+    sha256: 63539429076b7ebbab6daa7656cfb079393bf644971156dc349d7c0453694ac2
   original:
-    hackage: type-level-sets-0.8.7.0
-- completed:
-    hackage: effect-monad-0.8.0.0@sha256:e93c2ffa8f7553470b8e34ed502a93643bb3e07f0b0e474ce900bca09a0ada12,2804
-    pantry-tree:
-      size: 2940
-      sha256: 7a2d24382e0f893c75c8bd45b2f63242fa57e89607a17113521453afa93fe4fe
-  original:
-    hackage: effect-monad-0.8.0.0
-snapshots: []
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/18.yaml
