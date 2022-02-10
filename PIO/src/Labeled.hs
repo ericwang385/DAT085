@@ -20,6 +20,6 @@ instance Effect Labeled where
 
   return = MkLabeled
   (MkLabeled a) >>= f = MkLabeled . val $ f a
-  
-tag :: a -> Type -> Labeled Type a 
-tag x _ = MkLabeled x
+
+up :: (Purpose.CanFlowTo p1 p2) => Labeled p1 a -> Labeled p2 a
+up (MkLabeled a) = MkLabeled a
