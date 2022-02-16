@@ -25,7 +25,7 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-    - hashable
+    - type-level-sets
 
 executables:
   PIO-exe:
@@ -48,5 +48,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - PIO
-    - hspec
-    - hashable
+    - type-level-sets
+
