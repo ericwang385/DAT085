@@ -24,13 +24,13 @@ type family Join a b where
 
 type family CanFlowTo a b :: Constraint where
   CanFlowTo All a = a ~ a
-  CanFlowTo (Set (a : b)) (Set (a : c)) = CanFlowTo (Set b) (Set c)
-  CanFlowTo (Set (a : b)) (Set (c : d)) = CanFlowTo (Set (a : b)) (Set d)
-  CanFlowTo (Set (a : b)) a = a ~ a
-  CanFlowTo (Set (a : b)) c = CanFlowTo (Set b) c
+  CanFlowTo (Set (a ': b)) (Set (a ': c)) = CanFlowTo (Set b) (Set c)
+  CanFlowTo (Set (a ': b)) (Set (c ': d)) = CanFlowTo (Set b) (Set (c ': d))
+  CanFlowTo (Set (a ': b)) a = a ~ a
+  CanFlowTo (Set (a ': b)) c = CanFlowTo (Set b) c
   CanFlowTo a (Set '[]) = a ~ a
-  CanFlowTo a (Set (a ': c)) = a ~ a
-  CanFlowTo a (Set (b ': c)) = CanFlowTo a (Set c)
+  --CanFlowTo a (Set (a ': c)) = a ~ a
+  --CanFlowTo a (Set (b ': c)) = CanFlowTo a (Set c)
 
 --  CanFlowTo (Set (a1 ': a2)) (Set (a1 ': b)) = CanFlowTo a2 b
 --  CanFlowTo (Purpose a1 a2) (Purpose a2 b) = CanFlowTo a1 b
