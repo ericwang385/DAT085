@@ -6,21 +6,21 @@
 
 module Labeled where
 
-import Effect
+import Control.Effect
 import Purpose
 import Prelude hiding (Monad(..))
 
 newtype Labeled p a = MkLabeled { val :: a }
 
 instance Effect Labeled where
-  type Btm Labeled = All
-  type CanFlowTo Labeled a b = Purpose.CanFlowTo a b
-  type Join Labeled a b = Purpose.Join a b
+  type Unit Labeled = All
+  type Inv Labeled a b = CanFlowTo a b
+  type Plus Labeled a b = Join a b
 
   return = MkLabeled
   (MkLabeled a) >>= f = MkLabeled . val $ f a
 
-up :: (Purpose.CanFlowTo p1 p2) => Labeled p1 a -> Labeled p2 a
+up :: (CanFlowTo p1 p2) => Labeled p1 a -> Labeled p2 a
 up (MkLabeled a) = MkLabeled a
 
 tag :: a -> Labeled p a

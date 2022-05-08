@@ -26,6 +26,7 @@ library:
   source-dirs: src
   dependencies:
     - type-level-sets
+    - effect-monad
 
 executables:
   PIO-exe:
@@ -49,4 +50,5 @@ tests:
     dependencies:
     - PIO
     - type-level-sets
+    - effect-monad
 

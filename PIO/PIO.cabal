@@ -25,9 +25,7 @@ source-repository head
 
 library
   exposed-modules:
-      Effect
       Labeled
-      Monad
       Purpose
   other-modules:
       Paths_PIO
@@ -35,6 +33,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , effect-monad
     , type-level-sets
   default-language: Haskell2010
 
@@ -63,5 +62,6 @@ test-suite PIO-test
   build-depends:
       PIO
     , base >=4.7 && <5
+    , effect-monad
     , type-level-sets
   default-language: Haskell2010
