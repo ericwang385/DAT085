@@ -6,26 +6,33 @@ module TypeChecked where
 
 import Labeled
 import Prelude hiding (Monad(..))
-import Effect
+import Control.Effect
 import Data.Type.Set
+import Purpose (Natural)
+
+type SendMail = '[Natural 1]
+type ReadDB = '[Natural 2]
+type WriteDB = '[Natural 3]
+type Verify = '[Natural 4]
 
 
-data SendMail
-data ReadDB
-data WriteDB
-data Verify
+type Login = Union ReadDB Verify
+type Marketing = Union ReadDB SendMail
+type Register = Union ReadDB (Union WriteDB (Union SendMail Verify))
 
+username :: Labeled (Set Register) String
+username = tag "TestName1"
 
-type Login = Set '[ReadDB, Verify]
-type Marketing = Set '[ReadDB, SendMail]
-type Register = Set '[ReadDB, WriteDB, SendMail, Verify]
+usermail :: Labeled (Set Login) String
+usermail = tag "Testmail1"
 
-username = tag "TestName1" :: Labeled Register String
-usermail = tag "Testmail1" :: Labeled Login String
-userIP = tag "TestIP" :: Labeled Verify String
-password = tag "TestPassword" :: Labeled Login String
+userIP :: Labeled (Set Verify) String
+userIP = tag "TestIP"
 
-sendAds :: Labeled Marketing Bool
+password :: Labeled (Set Login) String
+password = tag "TestPassword"
+
+sendAds :: Labeled (Set Marketing) Bool
 sendAds = usermail >>= \mail -> userIP >>= \ip -> tag True
 
 
