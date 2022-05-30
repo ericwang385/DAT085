@@ -8,8 +8,6 @@ import Labeled
 import Prelude hiding (Monad(..))
 import Control.Effect
 import Data.Type.Set
-import Data.Maybe
-import Data.List
 import Purpose (Natural, All)
 
 type SendMail = '[Natural 1]
@@ -18,7 +16,7 @@ type WriteDB = '[Natural 3]
 type Verify = '[Natural 4]
 
 
-type Login = Union ReadDB Verify
+type Login = Union ReadDB (Union SendMail Verify)
 type Marketing = Union ReadDB SendMail
 type Register = Union ReadDB (Union WriteDB (Union SendMail Verify))
 type DB = Labeled All [(Labeled (Set Register) String, Labeled (Set Login) String)]
@@ -53,14 +51,14 @@ login = verifyIP userIP >>=
 checkPass :: Labeled (Set Register) String -> Labeled (Set Login) String -> Labeled (Set Verify) Bool
 checkPass _ pass = password >>= \p -> pass >>= \p' -> if p == p' then tag True :: Labeled (Set Verify) Bool else tag False :: Labeled (Set Verify) Bool
 
-sendmail :: Labeled p String -> Labeled (Set SendMail) Bool
-sendmail _ = tag True
+sendmail :: Labeled (Set Login) String -> Labeled (Set SendMail) Bool
+sendmail ma = ma >>= \a -> tag True :: Labeled (Set SendMail) Bool
 
 userExist :: Labeled (Set Register) String -> Labeled (Set Verify) Bool
 userExist name = searchDB name >>= \ans -> if ans then tag True :: Labeled (Set Verify) Bool else tag False :: Labeled (Set Verify) Bool
 
-verifyIP :: Labeled p String -> Labeled (Set Verify) Bool
-verifyIP _ = tag True
+verifyIP :: Labeled (Set Verify) String -> Labeled (Set Verify) Bool
+verifyIP ma = ma >>= \a -> tag True :: Labeled (Set Verify) Bool
 
 searchDB :: Labeled (Set Register) String -> Labeled (Set Login) Bool
 searchDB _ = tag True :: Labeled (Set Login) Bool
