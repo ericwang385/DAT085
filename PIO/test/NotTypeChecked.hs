@@ -33,7 +33,7 @@ password :: Labeled (Set Login) String
 password = tag "TestPassword"
 
 sendAds :: Labeled (Set Marketing) Bool
-sendAds = usermail >>= \mail -> userIP >>= \ip -> tag True
+sendAds = usermail >>= \mail -> userIP >>= \ip -> tag True :: Labeled (Set Marketing) Bool
 
 
 
