@@ -8,32 +8,32 @@ import Labeled
 import Prelude hiding (Monad(..))
 import Control.Effect
 import Data.Type.Set
-import Purpose (Natural)
+import Purpose (Natural, PUnion)
 
-type SendMail = '[Natural 1]
-type ReadDB = '[Natural 2]
-type WriteDB = '[Natural 3]
-type Verify = '[Natural 4]
+type SendMail = Set '[Natural 1]
+type ReadDB = Set '[Natural 2]
+type WriteDB = Set '[Natural 3]
+type Verify = Set '[Natural 4]
 
 
-type Login = Union ReadDB Verify
-type Marketing = Union ReadDB SendMail
-type Register = Union ReadDB (Union WriteDB (Union SendMail Verify))
+type Login = PUnion ReadDB (PUnion SendMail Verify)
+type Marketing = PUnion ReadDB SendMail
+type Register = PUnion ReadDB (PUnion WriteDB (PUnion SendMail Verify))
 
-username :: Labeled (Set Register) String
+username :: Labeled Register String
 username = tag "TestName1"
 
-usermail :: Labeled (Set Login) String
+usermail :: Labeled Login String
 usermail = tag "Testmail1"
 
-userIP :: Labeled (Set Verify) String
+userIP :: Labeled Verify String
 userIP = tag "TestIP"
 
-password :: Labeled (Set Login) String
+password :: Labeled Login String
 password = tag "TestPassword"
 
-sendAds :: Labeled (Set Marketing) Bool
-sendAds = usermail >>= \mail -> userIP >>= \ip -> tag True :: Labeled (Set Marketing) Bool
+sendAds :: Labeled Marketing Bool
+sendAds = usermail >>= \mail -> userIP >>= \ip -> tag True :: Labeled Marketing Bool
 
 
 

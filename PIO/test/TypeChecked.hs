@@ -8,29 +8,29 @@ import Labeled
 import Prelude hiding (Monad(..))
 import Control.Effect
 import Data.Type.Set
-import Purpose (Natural, All)
+import Purpose (Natural, All, PUnion)
 
-type SendMail = '[Natural 1]
-type ReadDB = '[Natural 2]
-type WriteDB = '[Natural 3]
-type Verify = '[Natural 4]
+type SendMail = Set '[Natural 1]
+type ReadDB = Set '[Natural 2]
+type WriteDB = Set '[Natural 3]
+type Verify = Set '[Natural 4]
 
 
-type Login = Union ReadDB (Union SendMail Verify)
-type Marketing = Union ReadDB SendMail
-type Register = Union ReadDB (Union WriteDB (Union SendMail Verify))
-type DB = Labeled All [(Labeled (Set Register) String, Labeled (Set Login) String)]
+type Login = PUnion ReadDB (PUnion SendMail Verify)
+type Marketing = PUnion ReadDB SendMail
+type Register = PUnion ReadDB (PUnion WriteDB (PUnion SendMail Verify))
+type DB = Labeled All [(Labeled Register String, Labeled Login String)]
 
-username :: Labeled (Set Register) String
+username :: Labeled Register String
 username = tag "TestName1"
 
-usermail :: Labeled (Set Login) String
+usermail :: Labeled Login String
 usermail = tag "Testmail1"
 
-userIP :: Labeled (Set Verify) String
+userIP :: Labeled Verify String
 userIP = tag "TestIP"
 
-password :: Labeled (Set Login) String
+password :: Labeled Login String
 password = tag "TestPassword"
 
 database :: DB
@@ -48,22 +48,22 @@ login = verifyIP userIP >>=
                  else checkPass username password >>=
         \ans2 -> if ans2 then tag True :: Labeled (Set '[]) Bool  else tag False :: Labeled (Set '[]) Bool
 
-checkPass :: Labeled (Set Register) String -> Labeled (Set Login) String -> Labeled (Set Verify) Bool
-checkPass _ pass = password >>= \p -> pass >>= \p' -> if p == p' then tag True :: Labeled (Set Verify) Bool else tag False :: Labeled (Set Verify) Bool
+checkPass :: Labeled Register String -> Labeled Login String -> Labeled Verify Bool
+checkPass _ pass = password >>= \p -> pass >>= \p' -> if p == p' then tag True :: Labeled Verify Bool else tag False :: Labeled Verify Bool
 
-sendmail :: Labeled (Set Login) String -> Labeled (Set SendMail) Bool
-sendmail ma = ma >>= \a -> tag True :: Labeled (Set SendMail) Bool
+sendmail :: Labeled Login String -> Labeled SendMail Bool
+sendmail ma = ma >>= \a -> tag True :: Labeled SendMail Bool
 
-userExist :: Labeled (Set Register) String -> Labeled (Set Verify) Bool
-userExist name = searchDB name >>= \ans -> if ans then tag True :: Labeled (Set Verify) Bool else tag False :: Labeled (Set Verify) Bool
+userExist :: Labeled Register String -> Labeled Verify Bool
+userExist name = searchDB name >>= \ans -> if ans then tag True :: Labeled Verify Bool else tag False :: Labeled Verify Bool
 
-verifyIP :: Labeled (Set Verify) String -> Labeled (Set Verify) Bool
-verifyIP ma = ma >>= \a -> tag True :: Labeled (Set Verify) Bool
+verifyIP :: Labeled Verify String -> Labeled Verify Bool
+verifyIP ma = ma >>= \a -> tag True :: Labeled Verify Bool
 
-searchDB :: Labeled (Set Register) String -> Labeled (Set Login) Bool
-searchDB _ = tag True :: Labeled (Set Login) Bool
+searchDB :: Labeled Register String -> Labeled Login Bool
+searchDB _ = tag True :: Labeled Login Bool
 
-updateDB :: DB -> Labeled (Set Register) String -> Labeled (Set Login) String -> DB
+updateDB :: DB -> Labeled Register String -> Labeled Login String -> DB
 updateDB db name pass = db >>= \rawdb -> tag (rawdb ++ [(name, pass)]) :: DB
 
 

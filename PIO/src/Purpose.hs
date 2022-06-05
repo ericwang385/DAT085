@@ -24,6 +24,11 @@ type instance Cmp (Natural n) (Natural m) = CmpNat n m
 
 type Intersection s t = Dup (Sort (s :++ t))
 
+type family PUnion a b where
+    PUnion All (Set b) = All
+    PUnion (Set a) All = All
+    PUnion (Set a) (Set b) = Set (Union a b)
+
 type family Dup t where
     Dup '[]           = '[]
     Dup '[e]          = '[]
@@ -32,6 +37,7 @@ type family Dup t where
 
 type family Join a b where
   Join All (Set b) = Set b
+  Join (Set a) All = Set a
   Join (Set a) (Set b) = Set (Intersection a b)
 
 type family CanFlowTo a b :: Constraint where
